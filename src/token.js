@@ -34,12 +34,4 @@ async function getPayload(token) {
   return {};
 }
 
- const isAuthAccessToken = async (accessToken) => {
-  const { username } = await getPayload(accessToken);
-  if(username) {
-    const accessT = await redis.getAsync(`${username}_access_token`);
-    console.log("accessT ", accessT)
-  }
-}
-
-export default { generatePair, getPayload, isAuthAccessToken };
+export default { generatePair, getPayload };

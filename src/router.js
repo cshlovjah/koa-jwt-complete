@@ -2,25 +2,8 @@ import Router from "koa-router";
 import bodyParser from "koa-bodyparser";
 import User from "./user";
 import Token from "./token";
-
+import Auth from "../middleware/Auth";
 const router = new Router();
-
-router.get("/api", bodyParser(), async ctx => {
-  ctx.status = 401;
-
-  const { authorization } = ctx.headers;
-
-  if (!authorization || !authorization.match(/^Bearer\s/)) return;
-
-  const accessToken = authorization.replace(/^Bearer\s/, "");
-
-  await Token.isAuthAccessToken(accessToken);
-
-  ctx.status = 200;
-  ctx.body = {
-    message: "Hello"
-  };
-});
 
 router.post("/auth", bodyParser(), async ctx => {
   console.log(ctx.request.body);
@@ -51,6 +34,15 @@ router.get("/auth", async ctx => {
     ctx.status = 200;
     ctx.body = tokens;
   }
+});
+
+router.use(Auth)
+router.get("/api", bodyParser(), async ctx => {
+
+  ctx.status = 200;
+  ctx.body = {
+    message: "Hello"
+  };
 });
 
 export default router;
