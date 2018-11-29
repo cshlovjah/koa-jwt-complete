@@ -8,7 +8,7 @@ env.config();
 
 const key = process.env.KEY;
 async function generatePair(username) {
-  const accessToken = jwt.sign({ username }, key, { expiresIn: "10m" });
+  const accessToken = jwt.sign({ username }, key, { expiresIn: "1m" });
   const refreshToken = jwt.sign({ username }, key, { expiresIn: "30d" });
 
   const tokens = {
@@ -34,4 +34,12 @@ async function getPayload(token) {
   return {};
 }
 
-export default { generatePair, getPayload };
+ const isAuthAccessToken = async (accessToken) => {
+  const { username } = await getPayload(accessToken);
+  if(username) {
+    const accessT = await redis.getAsync(`${username}_access_token`);
+    console.log("accessT ", accessT)
+  }
+}
+
+export default { generatePair, getPayload, isAuthAccessToken };
