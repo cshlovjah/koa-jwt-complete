@@ -16,6 +16,10 @@ router.post("/auth", bodyParser(), async ctx => {
   }
 });
 
+router.post("/auth/refreshToken", bodyParser(), async ctx => {
+  ctx.status = 200;
+});
+
 router.get("/auth", async ctx => {
   ctx.status = 401;
   const { authorization } = ctx.headers;
@@ -36,9 +40,8 @@ router.get("/auth", async ctx => {
   }
 });
 
-router.use(Auth)
+router.use(Auth);
 router.get("/api", bodyParser(), async ctx => {
-
   ctx.status = 200;
   ctx.body = {
     message: "Hello"
