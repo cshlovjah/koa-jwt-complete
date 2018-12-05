@@ -5,7 +5,7 @@ import env from "dotenv";
 import router from "./router";
 import IO from "koa-socket-2";
 import cors from "@koa/cors";
-import logger from "koa2-winston";
+import winston from "koa2-winston";
 env.config();
 
 const port = process.env.PORT;
