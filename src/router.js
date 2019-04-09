@@ -18,6 +18,23 @@ router.post("/auth/login", bodyParser(), async ctx => {
   }
 });
 
+router.post("/auth/register", bodyParser(), async ctx => {
+
+  const user = await User.register(ctx.request.body)
+  if (!user) {
+    ctx.status = 200;
+    ctx.body = {
+      message: user
+    };
+  } else {
+    ctx.status = 409;
+    ctx.body = {
+      message: false
+    };
+  }
+
+});
+
 //Если истекло клиент отправляет на auth/refresh-token URL refresh token
 router.post("/auth/refresh-token", bodyParser(), async ctx => {
   ctx.status = 401;
@@ -36,7 +53,7 @@ router.post("/auth/refresh-token", bodyParser(), async ctx => {
   //Проверяет валидность и срок действия refresh token'а
   const currentDate = Math.floor(Date.now() / 1000);
   const expiresIn = jwt.decode(refreshToken).exp;
-  
+
   if (correctRefreshToken == refreshToken && currentDate < expiresIn) {
     console.log("refresh expiresIn ", expiresIn);
     const tokens = await Token.generatePair(username);
