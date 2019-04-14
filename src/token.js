@@ -17,6 +17,22 @@ async function generatePair(username) {
     expiresIn: jwt.decode(accessToken).exp
   };
 
+  const user = {
+    username: username,
+    tokens: {
+      access: {
+        token: accessToken,
+        expiresIn: jwt.decode(accessToken).exp
+      },
+      refresh: {
+        token: refreshToken,
+        expiresIn: jwt.decode(refreshToken).exp
+      },
+    }
+  }
+
+
+  await redis.setAsync(`${username}`, JSON.stringify(user));
   await redis.setAsync(`${username}_access_token`, accessToken);
   await redis.setAsync(`${username}_refresh_token`, refreshToken);
 

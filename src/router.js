@@ -19,9 +19,9 @@ router.post("/auth/login", bodyParser(), async ctx => {
 });
 
 router.post("/auth/register", bodyParser(), async ctx => {
-
+  console.log(ctx)
   const user = await User.register(ctx.request.body)
-  if (!user) {
+  if (user) {
     ctx.status = 200;
     ctx.body = {
       message: user
