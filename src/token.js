@@ -8,7 +8,7 @@ env.config();
 
 const key = process.env.KEY;
 async function generatePair(username) {
-  const accessToken = jwt.sign({ username }, key, { expiresIn: "1m" });
+  const accessToken = jwt.sign({ username }, key, { expiresIn: "30m" });
   const refreshToken = jwt.sign({ username }, key, { expiresIn: "30d" });
 
   const tokens = {
@@ -21,10 +21,6 @@ async function generatePair(username) {
       expiresIn: jwt.decode(refreshToken).exp
     }
   };
-
-  //await redis.setAsync(`${username}`, JSON.stringify(user));
-  //await redis.setAsync(`${username}_access_token`, accessToken);
-  //await redis.setAsync(`${username}_refresh_token`, refreshToken);
 
   return tokens;
 }

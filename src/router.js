@@ -6,7 +6,7 @@ import Authorization from "./middleware/Authorization";
 import redis from "./redis";
 import jwt from "jsonwebtoken";
 import deviceType from 'device-type';
-
+import UpdateToken from "./UpdateToken";
 const router = new Router();
 
 router.get("/", bodyParser(), async ctx => {
@@ -21,10 +21,11 @@ router.post("/auth/login", bodyParser(), async ctx => {
   console.log(ctx.request.body);
   const isAuthorized = await User.isAuthorized(ctx.request.body);
   if (isAuthorized) {
-    const tokens = await Token.generatePair(ctx.request.body.username);
+    //Обновляем ключ
+    const updateToken = await UpdateToken(ctx.request.body);
     console.log("Авторизован");
     ctx.status = 200;
-    ctx.body = tokens;
+    ctx.body = updateToken;
   }
 });
 
