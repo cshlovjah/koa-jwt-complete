@@ -5,14 +5,22 @@ export default async (ctx, next) => {
   const start = Date.now();
 
   ctx.status = 401;
+  //console.log(ctx.headers)
   const { authorization } = ctx.headers;
 
   if (authorization || authorization.match(/^Bearer\s/)) {
     const accessToken = authorization.replace(/^Bearer\s/, "");
-
+    console.log("accessToken ", accessToken)
     const { username } = await Token.getPayload(accessToken);
-    const correctAccessToken = await redis.getAsync(`${username}_access_token`);
+   
+   
+    console.log("username ", username)
+    const userString = await redis.getAsync(`${username}`);
   
+    const user = JSON.parse(userString);
+
+    const correctAccessToken = user.tokens.accessToken.token
+
     if (accessToken == correctAccessToken) {
       const { username } = await Token.getPayload(correctAccessToken);
       if (username) {
@@ -21,6 +29,7 @@ export default async (ctx, next) => {
         await next();
       }
     }
+
   } else {
     ctx.status = 404;
     await next();
