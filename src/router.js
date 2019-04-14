@@ -5,7 +5,17 @@ import Token from "./token";
 import Authorization from "./middleware/Authorization";
 import redis from "./redis";
 import jwt from "jsonwebtoken";
+import deviceType from 'device-type';
+
 const router = new Router();
+
+router.get("/", bodyParser(), async ctx => {
+  console.log(deviceType(ctx.request))
+  ctx.status = 200;
+  ctx.body = {
+    message: "Hello"
+  };
+});
 
 router.post("/auth/login", bodyParser(), async ctx => {
   console.log(ctx.request.body);
@@ -19,7 +29,7 @@ router.post("/auth/login", bodyParser(), async ctx => {
 });
 
 router.post("/auth/register", bodyParser(), async ctx => {
-  console.log(ctx)
+  
   const user = await User.register(ctx.request.body)
   if (user) {
     ctx.status = 200;
