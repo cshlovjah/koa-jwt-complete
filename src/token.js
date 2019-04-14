@@ -26,13 +26,14 @@ async function generatePair(username) {
 }
 
 async function getPayload(token) {
+  
   try {
     const payload = await jwt.verifyAsync(token, key);
     return payload;
   } catch (error) {
     console.log("Cannot verify token: ", token);
   }
-
+  
   return {};
 }
 

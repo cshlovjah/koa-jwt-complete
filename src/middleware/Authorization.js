@@ -12,16 +12,16 @@ export default async (ctx, next) => {
     const accessToken = authorization.replace(/^Bearer\s/, "");
     console.log("accessToken ", accessToken)
     const { username } = await Token.getPayload(accessToken);
+   
+   
     console.log("username ", username)
     const userString = await redis.getAsync(`${username}`);
   
     const user = JSON.parse(userString);
-    console.log("user: ", user)
-    //const correctAccessToken = user.tokens.accessToken.token
 
-    /*
+    const correctAccessToken = user.tokens.accessToken.token
+
     if (accessToken == correctAccessToken) {
-      
       const { username } = await Token.getPayload(correctAccessToken);
       if (username) {
         console.log("Start ", start);
@@ -29,7 +29,7 @@ export default async (ctx, next) => {
         await next();
       }
     }
-*/
+
   } else {
     ctx.status = 404;
     await next();
