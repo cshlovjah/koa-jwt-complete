@@ -13,7 +13,7 @@ async function CreateUser(userCredentials){
         tokens: tokens
     })
     await redis.setAsync(`${userCredentials.username}`, JSON.stringify(modifyUser(userCredentials)));
-    return token
+    return tokens
 }
 
 export default CreateUser

@@ -13,7 +13,7 @@ router.get("/", bodyParser(), async ctx => {
   console.log(deviceType(ctx.request))
   ctx.status = 200;
   ctx.body = {
-    message: "Hello"
+    message: "Welcome to great aurh api!"
   };
 });
 
@@ -30,8 +30,9 @@ router.post("/auth/login", bodyParser(), async ctx => {
 });
 
 router.post("/auth/register", bodyParser(), async ctx => {
-  
+  console.log("/auth/register ", ctx.request.body)
   const user = await User.register(ctx.request.body)
+  console.log("user ", user)
   if (user) {
     ctx.status = 200;
     ctx.body = {
@@ -58,16 +59,22 @@ router.post("/auth/refresh-token", bodyParser(), async ctx => {
   //Сервер берет user_id из payload'a refresh token'a по нему ищет в БД запись данного юзера и достает из него refresh token
 
   const { username } = await Token.getPayload(refreshToken);
-  const correctRefreshToken = await redis.getAsync(`${username}_refresh_token`);
-
+  console.log("username ", username)
+  const user = JSON.parse(await redis.getAsync(`${username}`));
+  console.log("correctRefreshToken ", user)
   //Сравнивает refresh token клиента с refresh token'ом найденным в БД
   //Проверяет валидность и срок действия refresh token'а
   const currentDate = Math.floor(Date.now() / 1000);
   const expiresIn = jwt.decode(refreshToken).exp;
 
-  if (correctRefreshToken == refreshToken && currentDate < expiresIn) {
+  if (user.tokens.refreshToken.token == refreshToken && currentDate < expiresIn) {
     console.log("refresh expiresIn ", expiresIn);
     const tokens = await Token.generatePair(username);
+    const modifyUser = user => ({
+        ...user,
+        tokens: tokens
+    })
+    console.log(modifyUser(user))
     ctx.status = 200;
     ctx.body = tokens;
   }
