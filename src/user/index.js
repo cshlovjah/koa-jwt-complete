@@ -7,16 +7,10 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 async function isAuthorized(request) {
   const { error, value } = Joi.validate(request, schema);
-
   if (error) return false;
-
   const providedPassword = value.password;
-
-  const userStringify = await redis.getAsync(value.username);
-
-  const user = JSON.parse(userStringify);
+  const user = JSON.parse(await redis.getAsync(value.username));
   const hashPassword = bcrypt.compareSync(providedPassword, user.password);
-
   return hashPassword;
 }
 
@@ -30,9 +24,6 @@ async function register(request) {
   const { error, value } = Joi.validate(request, schema);
   if (error) return false;
   const userNameExist = await redis.getAsync(`${value.username}`);
-  const providedUsername = value.username;
-  const providedPassword = value.password;
-
   console.log("userNameExist ", userNameExist)
   if (userNameExist === null) {
     console.log("Имя пользователя не найдено, созадем")
