@@ -5,15 +5,14 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 async function UpdateUser(userCredentials){
-    const userString = await redis.getAsync(`${userCredentials.username}`);
-    let user = JSON.parse(userString);
-
+    const user = JSON.parse(await redis.getAsync(`${userCredentials.username}`));
     const tokens = await Token.generatePair(userCredentials.username);
-    user.tokens = tokens;
-    await redis.setAsync(`${userCredentials.username}`, JSON.stringify(user));
-
-    return user.tokens
-    
+    const modifyUser = user => ({
+        ...user,
+        tokens: tokens
+    })
+    await redis.setAsync(`${userCredentials.username}`, JSON.stringify(modifyUser(user)));
+    return tokens
 }
 
 export default UpdateUser
