@@ -13,7 +13,7 @@ router.get("/", bodyParser(), async ctx => {
   console.log(deviceType(ctx.request))
   ctx.status = 200;
   ctx.body = {
-    message: "Welcome to great aurh api!"
+    message: "Welcome to great auth api!"
   };
 });
 
