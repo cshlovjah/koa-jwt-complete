@@ -1,6 +1,6 @@
 //During the test the env variable is set to test
-process.env.NODE_ENV = 'test';
-require("dotenv");
+//process.env.NODE_ENV = 'test';
+require('dotenv').config();
 const client  = require("redis").createClient({
   host: 's1',
   port: 6379,
@@ -33,7 +33,7 @@ describe('Аутентифика́ция', () => {
         done();
       });
   });
-/*
+
   describe('/POST http://localhost:3000/user/register, new user test123, email test123@test.com, password test123', () => {
     it('it should result: status: success and message: User added successfully and data: null', () => {
       chai.request(app)
@@ -171,5 +171,5 @@ describe('Аутентифика́ция', () => {
     })
   });
 
-  */
+  
 });

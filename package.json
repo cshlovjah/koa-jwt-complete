@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "backpack",
+    "dev": "export NODE_ENV=development && backpack",
     "build": "backpack build",
     "test": "export NODE_ENV=test && npm run build && mocha --timeout 10000 test/**/*.spec.js"
   },
@@ -30,6 +30,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
     "chai-iso8601": "^1.0.0",
+    "custom-env": "^1.0.0",
     "mocha": "^6.1.3"
   }
 }

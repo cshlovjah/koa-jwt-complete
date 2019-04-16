@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import bluebird from "bluebird";
 import env from "dotenv";
-import redis from "./redis";
 
 bluebird.promisifyAll(jwt);
 env.config();

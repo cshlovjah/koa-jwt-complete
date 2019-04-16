@@ -7,7 +7,7 @@ import IO from "koa-socket-2";
 import cors from "@koa/cors";
 import winston from "koa2-winston";
 env.config();
-
+console.log("Environment: ", process.env.NODE_ENV);
 const port = process.env.PORT;
 const server = new Koa();
 const io = new IO();
