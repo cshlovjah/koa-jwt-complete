@@ -1,63 +1,62 @@
 //During the test the env variable is set to test
 //process.env.NODE_ENV = 'test';
-require('dotenv').config();
-const client  = require("redis").createClient({
-  host: 's1',
-  port: 6379,
+const axios = require("axios");
+var qs = require('qs');
+require("dotenv").config();
+const client = require("redis").createClient({
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT
 });
 
-const chai = require('chai');
+const chai = require("chai");
 const should = chai.should;
 const expect = chai.expect;
-const chaiHttp = require('chai-http');
-const app = require('../build/main.js');
-chai.use(require('chai-iso8601')({
-  marginRequired: true
-}));
+const chaiHttp = require("chai-http");
+const app = require("../build/main.js");
+chai.use(
+  require("chai-iso8601")({
+    marginRequired: true
+  })
+);
 
 chai.use(chaiHttp);
-let token = '';
-//Our parent block
-describe('Аутентифика́ция', () => {
+const hostname = process.env.HOST;
+const port = process.env.PORT;
 
-  beforeEach((done) => { //Before each test we empty the database
-    setTimeout(function () {
+let token = "";
+//Our parent block
+describe("Аутентифика́ция", () => {
+  beforeEach(done => {
+    //Before each test we empty the database
+    setTimeout(function() {
       done();
     }, 1000);
-
   });
 
-
-  it('Flush users', function (done) { 
-      client.flushall((res)=>{
-        done();
-      });
+  it("Flush users", function(done) {
+    client.flushall(res => {
+      done();
+    });
   });
 
-  describe('/POST http://localhost:3000/user/register, new user test123, email test123@test.com, password test123', () => {
-    it('it should result: status: success and message: User added successfully and data: null', () => {
-      chai.request(app)
-        .post('/users/register')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .type('form')
-        .send({
-          'name': 'test123',
-          'password': 'test123',
-          'email': 'test123@test.com'
-        })
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(200);
-          expect(res.body).be.a('object');
-          expect(res.body).to.deep.include({
-            status: 'success',
-            message: 'User added successfully',
-            data: null
-          });
-        });
-    })
+  describe("POST /auth/register, username test123890, password test123890", () => {
+    it("it should result: ", async () => {
+      const data = {
+        username: "test123890",
+        password: "test123890"
+      };
+      const options = {
+        method: "POST",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        data: qs.stringify(data),
+        url: `http://${hostname}:${port}/auth/register`
+      };
+      const result = await axios(options);
+      console.log(result.data)
+   
+    });
   });
-
+  /*
   describe('again /POST http://localhost:3000/user/register, new user test123, email test123@test.com, password test123', () => {
     it('it should Status 409', () => {
       chai.request(app)
@@ -170,6 +169,5 @@ describe('Аутентифика́ция', () => {
         });
     })
   });
-
-  
+*/
 });
