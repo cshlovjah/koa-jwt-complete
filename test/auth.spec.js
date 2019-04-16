@@ -1,6 +1,10 @@
 //During the test the env variable is set to test
 process.env.NODE_ENV = 'test';
-
+require("dotenv");
+const client  = require("redis").createClient({
+  host: 's1',
+  port: 6379,
+});
 
 const chai = require('chai');
 const should = chai.should;
@@ -17,6 +21,8 @@ let token = '';
 describe('Аутентифика́ция', () => {
 
   beforeEach((done) => { //Before each test we empty the database
+     client.flushallAsync();
+
     /*
    User.remove({}, (err) => {
      done();
