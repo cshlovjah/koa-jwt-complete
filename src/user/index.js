@@ -3,6 +3,7 @@ import schema from "./schema";
 import redis from "../redis";
 import Token from "../token";
 import CreateUser from "../CreateUser";
+
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 async function isAuthorized(request) {
@@ -16,8 +17,9 @@ async function isAuthorized(request) {
 
 async function hasValidRefreshToken(token) {
   const { username } = await Token.getPayload(token);
-  const correctRefreshToken = await redis.getAsync(`${username}_refresh_token`);
-  return correctRefreshToken == token
+  const user = await redis.getAsync(`${username}`);
+  user.tokens.refreshToken.token
+  return user.tokens.refreshToken.token == token
 }
 
 async function register(request) {
