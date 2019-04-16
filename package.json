@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "backpack",
-    "build": "backpack build"
+    "build": "backpack build",
+    "test": "export NODE_ENV=test && npm run build && mocha --timeout 10000 test/**/*.spec.js"
   },
   "dependencies": {
     "@koa/cors": "2",
