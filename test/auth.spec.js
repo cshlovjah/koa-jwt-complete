@@ -21,13 +21,6 @@ let token = '';
 describe('Аутентифика́ция', () => {
 
   beforeEach((done) => { //Before each test we empty the database
-     client.flushallAsync();
-
-    /*
-   User.remove({}, (err) => {
-     done();
-    });
-    */
     setTimeout(function () {
       done();
     }, 1000);
@@ -36,11 +29,9 @@ describe('Аутентифика́ция', () => {
 
 
   it('Flush users', function (done) { 
-    // Calling `done()` twice is an error
-   // User.remove({}, (err) => {
-    //  done();
-   // });
-
+      client.flushall((res)=>{
+        done();
+      });
   });
 /*
   describe('/POST http://localhost:3000/user/register, new user test123, email test123@test.com, password test123', () => {
