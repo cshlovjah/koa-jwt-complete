@@ -1,7 +1,7 @@
 //During the test the env variable is set to test
 //process.env.NODE_ENV = 'test';
 const axios = require("axios");
-var qs = require('qs');
+var qs = require("qs");
 require("dotenv").config();
 const client = require("redis").createClient({
   host: process.env.REDIS_HOST,
@@ -11,7 +11,6 @@ const client = require("redis").createClient({
 const chai = require("chai");
 const should = chai.should;
 const expect = chai.expect;
-const chaiHttp = require("chai-http");
 const app = require("../build/main.js");
 chai.use(
   require("chai-iso8601")({
@@ -19,7 +18,6 @@ chai.use(
   })
 );
 
-chai.use(chaiHttp);
 const hostname = process.env.HOST;
 const port = process.env.PORT;
 
@@ -27,7 +25,6 @@ let token = "";
 //Our parent block
 describe("Аутентифика́ция", () => {
   beforeEach(done => {
-    //Before each test we empty the database
     setTimeout(function() {
       done();
     }, 1000);
@@ -52,8 +49,8 @@ describe("Аутентифика́ция", () => {
         url: `http://${hostname}:${port}/auth/register`
       };
       const result = await axios(options);
-      console.log(result.data)
-   
+      token = result.data;
+      expect(result.data).be.a("object");
     });
   });
   /*
