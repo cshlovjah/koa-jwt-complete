@@ -1,12 +1,16 @@
 import Koa from "koa";
 import logger from "koa-morgan";
 import helmet from "koa-helmet";
-import env from "dotenv";
+//import env from "dotenv";
 import router from "./router";
 import IO from "koa-socket-2";
 import cors from "@koa/cors";
 import winston from "koa2-winston";
-env.config();
+
+import env from "custom-env";
+env.env(true)
+
+//env.config();
 console.log("Environment: ", process.env.NODE_ENV);
 const port = process.env.PORT;
 const server = new Koa();

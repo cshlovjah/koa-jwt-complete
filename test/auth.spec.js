@@ -1,13 +1,14 @@
 //During the test the env variable is set to test
 //process.env.NODE_ENV = 'test';
+require('custom-env').env(true)
 const axios = require("axios");
 var qs = require("qs");
-require("dotenv").config();
+
 const client = require("redis").createClient({
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT
 });
-
+console.log("TOKEN: ", process.env.TOKEN)
 const chai = require("chai");
 const should = chai.should;
 const expect = chai.expect;

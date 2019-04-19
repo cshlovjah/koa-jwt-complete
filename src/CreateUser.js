@@ -1,5 +1,4 @@
 import Token from "./token";
-import env from "dotenv";
 import redis from "./redis";
 const bcrypt = require('bcrypt');
 const saltRounds = 10;

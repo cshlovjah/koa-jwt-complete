@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import bluebird from "bluebird";
-import env from "dotenv";
-
+//import env from "dotenv";
+import env from "custom-env";
+env.env(true)
 bluebird.promisifyAll(jwt);
 env.config();
 
