@@ -26,7 +26,7 @@ async function register(request) {
   const { error, value } = Joi.validate(request.body, schema);
  
   value.ua = uaparserjs(request.header['user-agent']);
-  console.log(value)
+  value.ua.clientip = request.ip
   console.log(error)
   if (error) return false;
   const userNameExist = await redis.getAsync(`${value.username}`);

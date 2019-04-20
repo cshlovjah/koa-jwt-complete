@@ -27,7 +27,7 @@ io.on("connection", (ctx, data) => {
 
   //console.log('client sent data to message endpoint', data);
 });
-
+server.proxy = true;
 server
   .use(cors())
   .use(helmet())

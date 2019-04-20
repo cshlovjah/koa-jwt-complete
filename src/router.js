@@ -14,7 +14,7 @@ const router = new Router();
 router.get("/", bodyParser(), async ctx => {
   var ua = uaparserjs(ctx.request.header['user-agent']);
 
-  console.log(ua)
+  console.log(ctx.ip)
   //console.log(deviceType(ctx.request))
   ctx.status = 200;
   ctx.body = {
