@@ -3,7 +3,7 @@ import schema from "./schema";
 import redis from "../redis";
 import Token from "../token";
 import CreateUser from "../CreateUser";
-
+import uaparserjs from "ua-parser-js";
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 async function isAuthorized(request) {
@@ -23,12 +23,13 @@ async function hasValidRefreshToken(token) {
 }
 
 async function register(request) {
-  const { error, value } = Joi.validate(request, schema);
+  const { error, value } = Joi.validate(request.body, schema);
+ 
+  value.ua = uaparserjs(request.header['user-agent']);
+  console.log(value)
   console.log(error)
   if (error) return false;
   const userNameExist = await redis.getAsync(`${value.username}`);
-    console.log("reg", value)
-  console.log("userNameExist ", userNameExist)
   if (userNameExist === null) {
     console.log("Имя пользователя не найдено, созадем")
     const token = await CreateUser(value);

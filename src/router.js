@@ -7,10 +7,15 @@ import redis from "./redis";
 import jwt from "jsonwebtoken";
 import deviceType from 'device-type';
 import UpdateToken from "./UpdateToken";
+import uaparserjs from "ua-parser-js";
+import UserAgent from 'user-agents';
 const router = new Router();
 
 router.get("/", bodyParser(), async ctx => {
-  console.log(deviceType(ctx.request))
+  var ua = uaparserjs(ctx.request.header['user-agent']);
+
+  console.log(ua)
+  //console.log(deviceType(ctx.request))
   ctx.status = 200;
   ctx.body = {
     message: "Welcome to great auth api!"
@@ -30,9 +35,7 @@ router.post("/auth/login", bodyParser(), async ctx => {
 });
 
 router.post("/auth/register", bodyParser(), async ctx => {
-  console.log("/auth/register ", ctx.request.body)
-  const user = await User.register(ctx.request.body)
-  console.log("user ", user)
+  const user = await User.register(ctx.request)
   if (user) {
     ctx.status = 200;
     ctx.body = {

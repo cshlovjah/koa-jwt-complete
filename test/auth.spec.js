@@ -8,7 +8,7 @@ const client = require("redis").createClient({
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT
 });
-console.log("TOKEN: ", process.env.TOKEN)
+
 const chai = require("chai");
 const should = chai.should;
 const expect = chai.expect;
@@ -51,6 +51,7 @@ describe("Аутентифика́ция", () => {
       };
       const result = await axios(options);
       token = result.data;
+      console.log(result)
       expect(result.data).be.a("object");
     });
   });
