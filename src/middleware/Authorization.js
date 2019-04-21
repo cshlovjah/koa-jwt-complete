@@ -16,7 +16,7 @@ export default async (ctx, next) => {
     const userString = await redis.getAsync(`${username}`);
 
     const user = JSON.parse(userString);
-    console.log("user ", user)
+ 
     if (user !== null) {
 
       const cursor = user.sessions.map(function (session) { return session.tokens.accessToken.token; }).indexOf(accessToken);

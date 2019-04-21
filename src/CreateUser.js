@@ -14,15 +14,16 @@ async function CreateUser(userCredentials, session){
         sessions: [
             {
                 id: uuidv4(),
-                fpc: objectHash(session.ua),
-                ua: session.ua,
-                tokens: tokens
+                fpc: objectHash(session),
+                ua: session,
+                tokens: tokens,
+                createdAt: new Date(),
             }
         ],
         password: password,
         createdAt: new Date(),
-    })
-    console.log("userCredentials", modifyUser(userCredentials, session))
+    });
+    modifyUser(userCredentials, session);
     await redis.setAsync(`${userCredentials.username}`, JSON.stringify(modifyUser(userCredentials, session)));
     return tokens
 }

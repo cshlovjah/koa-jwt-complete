@@ -6,6 +6,7 @@ import CreateUser from "../CreateUser";
 import uaparserjs from "ua-parser-js";
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+
 async function isAuthorized(request) {
   const { error, value } = Joi.validate(request, schema);
   if (error) return false;
