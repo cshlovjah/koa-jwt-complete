@@ -19,10 +19,8 @@ export default async (ctx, next) => {
     console.log("user ", user)
     if (user !== null) {
 
-      var elementPos = user.sessions.map(function (x) { return x.tokens.accessToken.token; }).indexOf(accessToken);
-      var objectFound = user.sessions[elementPos];
-      console.log(objectFound)
-
+      const cursor = user.sessions.map(function (session) { return session.tokens.accessToken.token; }).indexOf(accessToken);
+      const objectFound = user.sessions[cursor];
       const correctAccessToken = objectFound.tokens.accessToken.token
 
       if (accessToken == correctAccessToken) {

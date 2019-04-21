@@ -24,8 +24,6 @@ async function hasValidRefreshToken(token) {
 
 async function register(request) {
   const { error, value } = Joi.validate(request.body, schema);
- 
-
   const session = {
     ua: uaparserjs(request.header['user-agent']),
     clientip: request.ip

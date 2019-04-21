@@ -20,6 +20,7 @@ async function CreateUser(userCredentials, session){
             }
         ],
         password: password,
+        createdAt: new Date(),
     })
     console.log("userCredentials", modifyUser(userCredentials, session))
     await redis.setAsync(`${userCredentials.username}`, JSON.stringify(modifyUser(userCredentials, session)));

@@ -64,20 +64,31 @@ router.post("/auth/refresh-token", bodyParser(), async ctx => {
   const { username } = await Token.getPayload(refreshToken);
   console.log("username ", username)
   const user = JSON.parse(await redis.getAsync(`${username}`));
-  console.log("correctRefreshToken ", user)
+  console.log("user", user)
+  const cursor = user.sessions.map(function (session) { return session.tokens.refreshToken.token; }).indexOf(refreshToken);
+  console.log("Cursor ", cursor)
+  const objectFound = user.sessions[cursor];
+  console.log("objectFound", objectFound)
   //Сравнивает refresh token клиента с refresh token'ом найденным в БД
   //Проверяет валидность и срок действия refresh token'а
   const currentDate = Math.floor(Date.now() / 1000);
   const expiresIn = jwt.decode(refreshToken).exp;
 
-  if (user.tokens.refreshToken.token == refreshToken && currentDate < expiresIn) {
-    console.log("refresh expiresIn ", expiresIn);
+  if (objectFound.tokens.refreshToken.token == refreshToken && currentDate < expiresIn) {
     const tokens = await Token.generatePair(username);
+    console.log("user ", user.sessions[cursor])
+    
     const modifyUser = user => ({
         ...user,
-        tokens: tokens
+        tokens: tokens,
+        updatedAt: new Date(),
     })
-    modifyUser(user);
+    console.log("***")
+    const modifiedSession = modifyUser(user.sessions[cursor]);
+   
+    user.sessions[cursor] = modifiedSession
+    console.log("User", user)
+    await redis.setAsync(`${username}`, JSON.stringify(user));
     ctx.status = 200;
     ctx.body = tokens;
   }
