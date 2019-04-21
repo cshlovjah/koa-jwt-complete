@@ -5,21 +5,24 @@ import objectHash from "object-hash";
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-async function CreateUser(userCredentials){
+async function CreateUser(userCredentials, session){
     const password = bcrypt.hashSync(userCredentials.password, saltRounds);
     const tokens = await Token.generatePair(userCredentials.username);
-    const fingerPrintClient = {
-        id: uuidv4(),
-        fpc: objectHash(userCredentials.ua)
-    }
-    console.log("userCredentials", userCredentials)
-    const modifyUser = user => ({
+   
+    const modifyUser = (user, session) => ({
         ...user,
-        fpc: fingerPrintClient,
+        sessions: [
+            {
+                id: uuidv4(),
+                fpc: objectHash(session.ua),
+                ua: session.ua,
+                tokens: tokens
+            }
+        ],
         password: password,
-        tokens: tokens
     })
-    await redis.setAsync(`${userCredentials.username}`, JSON.stringify(modifyUser(userCredentials)));
+    console.log("userCredentials", modifyUser(userCredentials, session))
+    await redis.setAsync(`${userCredentials.username}`, JSON.stringify(modifyUser(userCredentials, session)));
     return tokens
 }
 

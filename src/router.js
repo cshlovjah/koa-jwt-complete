@@ -77,7 +77,7 @@ router.post("/auth/refresh-token", bodyParser(), async ctx => {
         ...user,
         tokens: tokens
     })
-    console.log(modifyUser(user))
+    modifyUser(user);
     ctx.status = 200;
     ctx.body = tokens;
   }

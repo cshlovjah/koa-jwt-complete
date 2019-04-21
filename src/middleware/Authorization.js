@@ -12,19 +12,26 @@ export default async (ctx, next) => {
     const accessToken = authorization.replace(/^Bearer\s/, "");
 
     const { username } = await Token.getPayload(accessToken);
-   
+
     const userString = await redis.getAsync(`${username}`);
-  
+
     const user = JSON.parse(userString);
+    console.log("user ", user)
+    if (user !== null) {
 
-    const correctAccessToken = user.tokens.accessToken.token
+      var elementPos = user.sessions.map(function (x) { return x.tokens.accessToken.token; }).indexOf(accessToken);
+      var objectFound = user.sessions[elementPos];
+      console.log(objectFound)
 
-    if (accessToken == correctAccessToken) {
-      const { username } = await Token.getPayload(correctAccessToken);
-      if (username) {
-        console.log("Start ", start);
-        ctx.status = 200;
-        await next();
+      const correctAccessToken = objectFound.tokens.accessToken.token
+
+      if (accessToken == correctAccessToken) {
+        const { username } = await Token.getPayload(correctAccessToken);
+        if (username) {
+          console.log("Start ", start);
+          ctx.status = 200;
+          await next();
+        }
       }
     }
 

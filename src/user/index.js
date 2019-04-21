@@ -25,14 +25,17 @@ async function hasValidRefreshToken(token) {
 async function register(request) {
   const { error, value } = Joi.validate(request.body, schema);
  
-  value.ua = uaparserjs(request.header['user-agent']);
-  value.ua.clientip = request.ip
+
+  const session = {
+    ua: uaparserjs(request.header['user-agent']),
+    clientip: request.ip
+  }
   console.log(error)
   if (error) return false;
   const userNameExist = await redis.getAsync(`${value.username}`);
   if (userNameExist === null) {
     console.log("Имя пользователя не найдено, созадем")
-    const token = await CreateUser(value);
+    const token = await CreateUser(value, session);
     return token
   } else {
     console.log("Имя пользователя существует, пропускаем")
