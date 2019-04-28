@@ -90,13 +90,19 @@ describe("Аутентифика́ция", () => {
         key: "value"
       }
 
-      const apiResult = await axios.post(
-        `http://${hostname}:${port}/api`,
-        bodyParameters,
-        config
-      )
-      expect(apiResult.data).be.a("object");
-      expect(apiResult.data).to.deep.equal({ message: "Hello" });
+      try{
+        const apiResult = await axios.post(
+          `http://${hostname}:${port}/api`,
+          bodyParameters,
+          config
+        )
+        console.log("apiResult", apiResult)
+        expect(apiResult.data).be.a("object");
+        expect(apiResult.data).to.deep.equal({ message: "Hello" });
+      } catch(err){
+        console.log("err ",err)
+      }
+
     })
   });
   /*
