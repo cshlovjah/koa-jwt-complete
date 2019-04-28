@@ -26,12 +26,12 @@ let token = "";
 //Our parent block
 describe("Аутентифика́ция", () => {
   beforeEach(done => {
-    setTimeout(function() {
+    setTimeout(function () {
       done();
     }, 1000);
   });
 
-  it("Flush users", function(done) {
+  it("Flush users", function (done) {
     client.flushall(res => {
       done();
     });
@@ -51,8 +51,8 @@ describe("Аутентифика́ция", () => {
       };
       const result = await axios(options);
       token = result.data;
-      console.log(result)
       expect(result.data).be.a("object");
+      
     });
   });
   /*
@@ -75,98 +75,102 @@ describe("Аутентифика́ция", () => {
         });
     })
   });
-
-  describe('/POST http://localhost:3000/user/authenticate', () => {
-    it('it should POST auth user test123, email test123@test.com, password test123', (done) => {
-      chai.request(app)
-        .post('/users/authenticate')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .type('form')
-        .send({
-          'password': 'test123',
-          'email': 'test123@test.com'
-        })
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(200);
-          expect(res.body).be.a('object');
-          token = res.body.data.token
-          done();
-        });
-    })
-  });
-
-  describe('/GET http://localhost:3000/profile', () => {
-    it('it should ', (done) => {
-      chai.request(app)
-        .get('/profile')
-        .set('x-access-token', token)
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(200);
-          expect(res.body).to.deep.include({
-            status: 'success',
-            message: 'found',
-            data: { name: 'test123', email: 'test123@test.com' }
-          });
-          done();
-        });
-    })
-  });
-
-  describe('/PUT http://localhost:3000/profile - firstname field Tester', () => {
-    it('it should complete', (done) => {
-      const requestDate = new Date().toISOString();
-      chai.request(app)
-        .put('/profile')
-        .set('x-access-token', token)
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send({ firstname: 'Tester' })
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(200);
-          expect(res.body.data.adding.firstname).to.equal('Tester');
-          expect(res.body.data.adding.updateAt).to.be.iso8601('gt', requestDate, 100);
-          done();
-        });
-    })
-  });
-
-  describe('/PUT http://localhost:3000/profile - lastname field Tester123', () => {
-    it('it should Tester123', (done) => {
-      const requestDate = new Date().toISOString();
-      chai.request(app)
-        .put('/profile')
-        .set('x-access-token', token)
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send({ lastname: 'Tester123' })
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(200);
-          expect(res.body.data.adding.lastname).to.equal('Tester123');
-          expect(res.body.data.adding.updateAt).to.be.iso8601('gt', requestDate, 100);
-          done();
-        });
-    })
-  });
-
-  describe('/PUT http://localhost:3000/profile - phone field 89121231232', () => {
-    it('it should 89121231232', (done) => {
-      const requestDate = new Date().toISOString();
-      chai.request(app)
-        .put('/profile')
-        .set('x-access-token', token)
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send({ phone: 89121231232 })
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(200);
-          expect(res.body.data.adding.phone).to.equal('89121231232');
-          expect(res.body.data.adding.updateAt).to.be.iso8601('gt', requestDate, 100);
-          done();
-        });
-    })
-  });
 */
+
+  describe(`/POST http://${hostname}:${port}/api`, () => {
+
+    it('it should message: Hello', async () => {
+      console.log("token:", token.message.accessToken.token)
+
+      var config = {
+        headers: { 'Authorization': "Bearer " + token.message.accessToken.token }
+      };
+
+      var bodyParameters = {
+        key: "value"
+      }
+
+      const apiResult = await axios.post(
+        `http://${hostname}:${port}/api`,
+        bodyParameters,
+        config
+      )
+      expect(apiResult.data).be.a("object");
+      expect(apiResult.data).to.deep.equal({ message: "Hello" });
+    })
+  });
+  /*
+    describe('/GET http://localhost:3000/profile', () => {
+      it('it should ', (done) => {
+        chai.request(app)
+          .get('/profile')
+          .set('x-access-token', token)
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res).to.have.status(200);
+            expect(res.body).to.deep.include({
+              status: 'success',
+              message: 'found',
+              data: { name: 'test123', email: 'test123@test.com' }
+            });
+            done();
+          });
+      })
+    });
+  
+    describe('/PUT http://localhost:3000/profile - firstname field Tester', () => {
+      it('it should complete', (done) => {
+        const requestDate = new Date().toISOString();
+        chai.request(app)
+          .put('/profile')
+          .set('x-access-token', token)
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send({ firstname: 'Tester' })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res).to.have.status(200);
+            expect(res.body.data.adding.firstname).to.equal('Tester');
+            expect(res.body.data.adding.updateAt).to.be.iso8601('gt', requestDate, 100);
+            done();
+          });
+      })
+    });
+  
+    describe('/PUT http://localhost:3000/profile - lastname field Tester123', () => {
+      it('it should Tester123', (done) => {
+        const requestDate = new Date().toISOString();
+        chai.request(app)
+          .put('/profile')
+          .set('x-access-token', token)
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send({ lastname: 'Tester123' })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res).to.have.status(200);
+            expect(res.body.data.adding.lastname).to.equal('Tester123');
+            expect(res.body.data.adding.updateAt).to.be.iso8601('gt', requestDate, 100);
+            done();
+          });
+      })
+    });
+  
+    describe('/PUT http://localhost:3000/profile - phone field 89121231232', () => {
+      it('it should 89121231232', (done) => {
+        const requestDate = new Date().toISOString();
+        chai.request(app)
+          .put('/profile')
+          .set('x-access-token', token)
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .send({ phone: 89121231232 })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res).to.have.status(200);
+            expect(res.body.data.adding.phone).to.equal('89121231232');
+            expect(res.body.data.adding.updateAt).to.be.iso8601('gt', requestDate, 100);
+            done();
+          });
+      })
+    });
+  */
 });

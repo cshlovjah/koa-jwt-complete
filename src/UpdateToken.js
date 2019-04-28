@@ -2,7 +2,7 @@ import Token from "./token";
 import redis from "./redis";
 import uuidv4 from "uuid/v4";
 import objectHash from "object-hash";
-import { suiteSetup } from "mocha";
+
 async function UpdateUser(userCredentials, session) {
   const user = JSON.parse(await redis.getAsync(`${userCredentials.username}`));
 

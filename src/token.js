@@ -7,9 +7,11 @@ bluebird.promisifyAll(jwt);
 env.config();
 
 const key = process.env.KEY;
+const expAccessToken = process.env.ACCESS_TOKEN_LIFE;
+const expRefreshToken = process.env.REFRESH_TOKEN_LIFE;
 async function generatePair(username) {
-  const accessToken = jwt.sign({ username }, key, { expiresIn: "30m" });
-  const refreshToken = jwt.sign({ username }, key, { expiresIn: "30d" });
+  const accessToken = jwt.sign({ username }, key, { expiresIn: expAccessToken });
+  const refreshToken = jwt.sign({ username }, key, { expiresIn: expRefreshToken });
 
   const tokens = {
     accessToken: {

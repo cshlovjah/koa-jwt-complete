@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken";
 import deviceType from "device-type";
 import UpdateToken from "./UpdateToken";
 import uaparserjs from "ua-parser-js";
-import UserAgent from "user-agents";
+
 
 const router = new Router();
 

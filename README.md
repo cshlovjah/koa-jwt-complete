@@ -1,6 +1,8 @@
 # JWT microservice
 
 Регистрация
+
+Возвращает два 
 ```
 /auth/register
 ```
